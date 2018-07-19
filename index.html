@@ -152,6 +152,107 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-操作系统安装及初始化规范" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="操作系统安装流程及初始化规范"><a href="#操作系统安装流程及初始化规范" class="headerlink" title="操作系统安装流程及初始化规范"></a>操作系统安装流程及初始化规范</h1><blockquote>
+<p>V1.0</p>
+</blockquote>
+<h2 id="操作系统安装流程"><a href="#操作系统安装流程" class="headerlink" title="操作系统安装流程"></a>操作系统安装流程</h2><h3 id="1-服务器采购"><a href="#1-服务器采购" class="headerlink" title="1.服务器采购"></a>1.服务器采购</h3><h3 id="2-服务器验收并设置raid"><a href="#2-服务器验收并设置raid" class="headerlink" title="2.服务器验收并设置raid"></a>2.服务器验收并设置raid</h3><h3 id="3-服务器验收清单，运维验收负责人签字"><a href="#3-服务器验收清单，运维验收负责人签字" class="headerlink" title="3.服务器验收清单，运维验收负责人签字"></a>3.服务器验收清单，运维验收负责人签字</h3><h3 id="4-服务器上架"><a href="#4-服务器上架" class="headerlink" title="4.服务器上架"></a>4.服务器上架</h3><h3 id="5-资产录入"><a href="#5-资产录入" class="headerlink" title="5.资产录入"></a>5.资产录入</h3><h3 id="6-开始自动化安装"><a href="#6-开始自动化安装" class="headerlink" title="6.开始自动化安装"></a>6.开始自动化安装</h3><ol>
+<li>将服务器划入装机vlan</li>
+<li><p>根据资产清单上的mac地址，自定义安装</p>
+<pre><code>1. 机房
+2. 机房区域
+3. 机柜
+4. 服务器位置
+5. 服务器网线接入端口
+   6. 该端口mac地址
+   7. profile：操作系统 分区等 预分配的ip地址 主机名 子网 网关 dns 角色
+</code></pre></li>
+<li><p>自动化平台，开始安装<br> mac地址： 00:50:56:3E:11:50<br> IP：192.168.64.201<br> 主机名：linux-node2<br> 掩码：255.255.255.0<br> 网关：192.168.64.2<br> DNS1：119.29.29.29<br> DNS2：182.254.116.116  </p>
+<pre>
+[root@linux-node1 ~]# cobbler system add --name=linux-node2.qinjiao --mac=00:50:56:3E:11:50 --profile=Centos7.4-x86_64 --ip-address=192.168.64.201 --subnet=255.255.255.0 --gateway=192.168.64.2 --interface=eth0 --static=1 --hostname=linux-node2 --name-servers="119.29.29.29" --kickstart=/var/lib/cobbler/kickstarts/Centos7.4-x86_64.ks  
+[root@linux-node1 ~]# cobbler system list      
+linux-node2.qinjiao  
+</pre>
+
+</li>
+</ol>
+<h2 id="操作系统安装规范"><a href="#操作系统安装规范" class="headerlink" title="操作系统安装规范"></a>操作系统安装规范</h2><ol>
+<li>当前我公司使用操作系统为Centos6和Centos7，均为x86_64架构，需使用公司cobbler进行自动化安装，禁止自定义设置。</li>
+<li>数据库统一使用cobbler上centos7-DB这个专用的profile，其他web应用统一使用cobbler上centos7-web-db。</li>
+</ol>
+<h2 id="系统初始化规范"><a href="#系统初始化规范" class="headerlink" title="系统初始化规范"></a>系统初始化规范</h2><h3 id="初始化操作"><a href="#初始化操作" class="headerlink" title="初始化操作"></a>初始化操作</h3><ul>
+<li>设置DNS：192.168.64.200</li>
+<li>安装zabbix agent：Zabbix Server：192.168.64.200</li>
+<li>安装Saltstack Minion： Saltstack Master：192.168.64.200</li>
+<li><p>history记录时间、用户 </p>
+<pre><code>export HISTTIMEFORMAT=&quot;%F %T `whoami` &quot;
+</code></pre></li>
+<li><p>日志记录操作</p>
+<pre><code>export PROMPT_COMMAND=&apos;{ MSG=$(HISTORY 1 | { read x y; echo $y; });logger &quot;[euid=$(whoami)]&quot;:$(who am i):[`pwd`]&quot;$msg&quot;; }&apos;
+</code></pre></li>
+<li><p>内核参数优化</p>
+</li>
+<li>主机名解析</li>
+</ul>
+<h3 id="目录规范"><a href="#目录规范" class="headerlink" title="目录规范"></a>目录规范</h3><ul>
+<li>脚本放置目录：/opt/shell  </li>
+<li>脚本日志目录：/opt/shell/log  </li>
+<li>脚本锁文件目录：/opt/shell/lock</li>
+</ul>
+<h3 id="服务安装规范"><a href="#服务安装规范" class="headerlink" title="服务安装规范"></a>服务安装规范</h3><ol>
+<li>源码安装路径 /usr/local/appname.version</li>
+<li>创建软连接 ln -s /usr/local/appname.version /usr/local/appname</li>
+</ol>
+<h3 id="主机名命名规范"><a href="#主机名命名规范" class="headerlink" title="主机名命名规范"></a>主机名命名规范</h3><p>&emsp; <strong>机房名称-项目-角色-集群-节点.域名</strong></p>
+<p>例子</p>
+<pre><code>idc01-xxshop-zabbix-bj-node01.shop.com
+</code></pre><h3 id="服务启动用户规范"><a href="#服务启动用户规范" class="headerlink" title="服务启动用户规范"></a>服务启动用户规范</h3><p>&emsp; 所有服务，统一使用www用户，uid为666，使用端口大于1024，除负载均衡需要监听80端口使用root启动外,。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/07/11/操作系统安装及初始化规范/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-web服务器磁盘满故障重现" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -197,11 +298,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">运维</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">运维</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
         		</li>
       		
 		</ul>
@@ -309,11 +410,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">运维</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">运维</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
         		</li>
       		
 		</ul>
@@ -405,11 +506,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">运维</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">运维</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
         		</li>
       		
 		</ul>
@@ -508,11 +609,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">运维</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">运维</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
         		</li>
       		
 		</ul>
@@ -656,11 +757,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
+                <a href="javascript:void(0)" class="js-tag color3">运维</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">运维</a>
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
             
             <div class="clearfix"></div>
