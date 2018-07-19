@@ -6,22 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>linux重要子目录 | Hexo</title>
+  <title>linux重要子目录 | Qin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.网卡配置文件1234567891011121314cat /etc/sysconfig/network-scripts/ifcfg-eth0DEVICE=eth0TYPE=EthernetONBOOT=yesNM_CONTROLLED=yesBOOTPROTO=staticIPADDR=192.168.3.34PREFIX=24GATEWAY=192.168.3.1DNS1=221.5.88.">
+  <meta name="description" content="1.网卡配置文件12345678910111213141516cat /etc/sysconfig/network-scripts/ifcfg-eth0DEVICE=eth0TYPE=EthernetONBOOT=yesNM_CONTROLLED=yesBOOTPROTO=staticIPADDR=192.168.3.34PREFIX=24GATEWAY=192.168.3.1DNS1=221.5">
 <meta name="keywords" content="运维,linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="linux重要子目录">
 <meta property="og:url" content="http://yoursite.com/2018/05/01/linux重要子目录/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="1.网卡配置文件1234567891011121314cat /etc/sysconfig/network-scripts/ifcfg-eth0DEVICE=eth0TYPE=EthernetONBOOT=yesNM_CONTROLLED=yesBOOTPROTO=staticIPADDR=192.168.3.34PREFIX=24GATEWAY=192.168.3.1DNS1=221.5.88.">
+<meta property="og:site_name" content="Qin">
+<meta property="og:description" content="1.网卡配置文件12345678910111213141516cat /etc/sysconfig/network-scripts/ifcfg-eth0DEVICE=eth0TYPE=EthernetONBOOT=yesNM_CONTROLLED=yesBOOTPROTO=staticIPADDR=192.168.3.34PREFIX=24GATEWAY=192.168.3.1DNS1=221.5">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-05-02T15:26:20.918Z">
+<meta property="og:updated_time" content="2018-07-19T04:01:49.483Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux重要子目录">
-<meta name="twitter:description" content="1.网卡配置文件1234567891011121314cat /etc/sysconfig/network-scripts/ifcfg-eth0DEVICE=eth0TYPE=EthernetONBOOT=yesNM_CONTROLLED=yesBOOTPROTO=staticIPADDR=192.168.3.34PREFIX=24GATEWAY=192.168.3.1DNS1=221.5.88.">
+<meta name="twitter:description" content="1.网卡配置文件12345678910111213141516cat /etc/sysconfig/network-scripts/ifcfg-eth0DEVICE=eth0TYPE=EthernetONBOOT=yesNM_CONTROLLED=yesBOOTPROTO=staticIPADDR=192.168.3.34PREFIX=24GATEWAY=192.168.3.1DNS1=221.5">
   
-    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="Qin" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -175,7 +175,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="1-网卡配置文件"><a href="#1-网卡配置文件" class="headerlink" title="1.网卡配置文件"></a>1.网卡配置文件</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/sysconfig/network-scripts/ifcfg-eth0</span><br><span class="line">DEVICE=eth0</span><br><span class="line">TYPE=Ethernet</span><br><span class="line">ONBOOT=yes</span><br><span class="line">NM_CONTROLLED=yes</span><br><span class="line">BOOTPROTO=static</span><br><span class="line">IPADDR=192.168.3.34</span><br><span class="line">PREFIX=24</span><br><span class="line">GATEWAY=192.168.3.1</span><br><span class="line">DNS1=221.5.88.88</span><br><span class="line"></span><br><span class="line">启动方式</span><br><span class="line">1.1 service network restart</span><br><span class="line">1.2 ifdown eth0 &amp;&amp; ifup eth0</span><br></pre></td></tr></table></figure>
+        <h1 id="1-网卡配置文件"><a href="#1-网卡配置文件" class="headerlink" title="1.网卡配置文件"></a>1.网卡配置文件</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/sysconfig/network-scripts/ifcfg-eth0</span><br><span class="line">DEVICE=eth0</span><br><span class="line">TYPE=Ethernet</span><br><span class="line">ONBOOT=yes</span><br><span class="line">NM_CONTROLLED=yes</span><br><span class="line">BOOTPROTO=static</span><br><span class="line">IPADDR=192.168.3.34</span><br><span class="line">PREFIX=24</span><br><span class="line">GATEWAY=192.168.3.1</span><br><span class="line">DNS1=221.5.88.88</span><br><span class="line"></span><br><span class="line">&lt;!-- more --&gt;</span><br><span class="line"></span><br><span class="line">启动方式</span><br><span class="line">1.1 service network restart</span><br><span class="line">1.2 ifdown eth0 &amp;&amp; ifup eth0</span><br></pre></td></tr></table></figure>
 <h1 id="2-DNS解析文件"><a href="#2-DNS解析文件" class="headerlink" title="2.DNS解析文件"></a>2.DNS解析文件</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/resolv.conf</span><br><span class="line">nameserver 221.5.88.88</span><br></pre></td></tr></table></figure>
 <h1 id="3-设定用户IP与域名或主机名的对应解析表，相当于本地DNS"><a href="#3-设定用户IP与域名或主机名的对应解析表，相当于本地DNS" class="headerlink" title="3.设定用户IP与域名或主机名的对应解析表，相当于本地DNS"></a>3.设定用户IP与域名或主机名的对应解析表，相当于本地DNS</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br><span class="line">192.168.3.34	<span class="built_in">test</span></span><br></pre></td></tr></table></figure>
 <h1 id="4-开机自动mount的配置文件"><a href="#4-开机自动mount的配置文件" class="headerlink" title="4.开机自动mount的配置文件"></a>4.开机自动mount的配置文件</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/fstab</span><br></pre></td></tr></table></figure>
@@ -332,6 +332,19 @@
             </div>
         </div>
         
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-网卡配置文件"><span class="toc-number">1.</span> <span class="toc-text">1.网卡配置文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-DNS解析文件"><span class="toc-number">2.</span> <span class="toc-text">2.DNS解析文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-设定用户IP与域名或主机名的对应解析表，相当于本地DNS"><span class="toc-number">3.</span> <span class="toc-text">3.设定用户IP与域名或主机名的对应解析表，相当于本地DNS</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-开机自动mount的配置文件"><span class="toc-number">4.</span> <span class="toc-text">4.开机自动mount的配置文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-开机自启动的程序文件"><span class="toc-number">5.</span> <span class="toc-text">5.开机自启动的程序文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-开机系统加载的启动级别文件"><span class="toc-number">6.</span> <span class="toc-text">6.开机系统加载的启动级别文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-设定NFS网络文件系统的配置文件"><span class="toc-number">7.</span> <span class="toc-text">7.设定NFS网络文件系统的配置文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8-系统全局环境变量配置路径"><span class="toc-number">8.</span> <span class="toc-text">8.系统全局环境变量配置路径</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
         
     </div>
 </aside>

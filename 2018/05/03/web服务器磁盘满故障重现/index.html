@@ -6,22 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>WEB服务器磁盘满故障深入解析 | Hexo</title>
+  <title>WEB服务器磁盘满故障深入解析 | Qin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="12345678910111213141516171819202122yum install httpd -ysed -i &apos;s#CustomLog logs/access_log combined#CustomLog /app/log/access_log combined#g&apos; /etc/httpd/conf/httpd.confmkdir /app/log/ -pdd if=/dev/zer">
+  <meta name="description" content="12345678910111213141516171819202122yum install httpd -ysed -i &apos;s#CustomLog logs/access_log combined#CustomLog /app/log/access_log combined#g&apos; /etc/httpd/conf/httpd.confmkdir /app/log/ -pdd if=/dev/ze">
 <meta name="keywords" content="运维,linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="WEB服务器磁盘满故障深入解析">
 <meta property="og:url" content="http://yoursite.com/2018/05/03/web服务器磁盘满故障重现/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="12345678910111213141516171819202122yum install httpd -ysed -i &apos;s#CustomLog logs/access_log combined#CustomLog /app/log/access_log combined#g&apos; /etc/httpd/conf/httpd.confmkdir /app/log/ -pdd if=/dev/zer">
+<meta property="og:site_name" content="Qin">
+<meta property="og:description" content="12345678910111213141516171819202122yum install httpd -ysed -i &apos;s#CustomLog logs/access_log combined#CustomLog /app/log/access_log combined#g&apos; /etc/httpd/conf/httpd.confmkdir /app/log/ -pdd if=/dev/ze">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-05-03T15:39:04.377Z">
+<meta property="og:updated_time" content="2018-07-19T04:02:05.747Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WEB服务器磁盘满故障深入解析">
-<meta name="twitter:description" content="12345678910111213141516171819202122yum install httpd -ysed -i &apos;s#CustomLog logs/access_log combined#CustomLog /app/log/access_log combined#g&apos; /etc/httpd/conf/httpd.confmkdir /app/log/ -pdd if=/dev/zer">
+<meta name="twitter:description" content="12345678910111213141516171819202122yum install httpd -ysed -i &apos;s#CustomLog logs/access_log combined#CustomLog /app/log/access_log combined#g&apos; /etc/httpd/conf/httpd.confmkdir /app/log/ -pdd if=/dev/ze">
   
-    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="Qin" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -175,7 +175,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">yum install httpd -y</span><br><span class="line">sed -i <span class="string">'s#CustomLog logs/access_log combined#CustomLog /app/log/access_log combined#g'</span> /etc/httpd/conf/httpd.conf</span><br><span class="line">mkdir /app/<span class="built_in">log</span>/ -p</span><br><span class="line">dd <span class="keyword">if</span>=/dev/zero of=/dev/sdc bs=8K count=10</span><br><span class="line">mkfs -t ext4  /dev/sdc</span><br><span class="line">mount -o loop /dev/sdc /app/<span class="built_in">log</span>/</span><br><span class="line">/etc/init.d/httpd start</span><br><span class="line">useradd -r -s /sbin/nologin apache</span><br><span class="line">写满磁盘</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> `seq 1 100000`;<span class="keyword">do</span> curl 192.168.3.34&gt;/dev/null;<span class="keyword">done</span></span><br><span class="line">可查看到磁盘block已满</span><br><span class="line">df -h</span><br><span class="line">可查看到磁盘inode未满</span><br><span class="line">df -i</span><br><span class="line">删除占用空间的文件</span><br><span class="line">rm -f access_log</span><br><span class="line">再次查看磁盘block空间未释放</span><br><span class="line">df -h</span><br><span class="line">yum install lsof -y</span><br><span class="line">lsof用来查看文件被进程占用的情况。</span><br><span class="line">lsof | grep del</span><br><span class="line">/etc/init.d/httpd restart</span><br></pre></td></tr></table></figure>
+        <a id="more"></a>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">yum install httpd -y</span><br><span class="line">sed -i <span class="string">'s#CustomLog logs/access_log combined#CustomLog /app/log/access_log combined#g'</span> /etc/httpd/conf/httpd.conf</span><br><span class="line">mkdir /app/<span class="built_in">log</span>/ -p</span><br><span class="line">dd <span class="keyword">if</span>=/dev/zero of=/dev/sdc bs=8K count=10</span><br><span class="line">mkfs -t ext4  /dev/sdc</span><br><span class="line">mount -o loop /dev/sdc /app/<span class="built_in">log</span>/</span><br><span class="line">/etc/init.d/httpd start</span><br><span class="line">useradd -r -s /sbin/nologin apache</span><br><span class="line">写满磁盘</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> `seq 1 100000`;<span class="keyword">do</span> curl 192.168.3.34&gt;/dev/null;<span class="keyword">done</span></span><br><span class="line">可查看到磁盘block已满</span><br><span class="line">df -h</span><br><span class="line">可查看到磁盘inode未满</span><br><span class="line">df -i</span><br><span class="line">删除占用空间的文件</span><br><span class="line">rm -f access_log</span><br><span class="line">再次查看磁盘block空间未释放</span><br><span class="line">df -h</span><br><span class="line">yum install lsof -y</span><br><span class="line">lsof用来查看文件被进程占用的情况。</span><br><span class="line">lsof | grep del</span><br><span class="line">/etc/init.d/httpd restart</span><br></pre></td></tr></table></figure>
 <h1 id="生产场景解决方案"><a href="#生产场景解决方案" class="headerlink" title="生产场景解决方案"></a>生产场景解决方案</h1><ol>
 <li>删除文件，重启服务。</li>
 <li>清空文件。</li>
@@ -336,6 +337,19 @@
             </div>
         </div>
         
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#生产场景解决方案"><span class="toc-number">1.</span> <span class="toc-text">生产场景解决方案</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#删除文件为何空间不释放？"><span class="toc-number">2.</span> <span class="toc-text">删除文件为何空间不释放？</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
         
     </div>
 </aside>

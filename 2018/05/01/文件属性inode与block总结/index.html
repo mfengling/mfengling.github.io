@@ -6,22 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>文件属性inode与block总结 | Hexo</title>
+  <title>文件属性inode与block总结 | Qin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.有关Block的大小 磁盘读取数据是按Block为单位读取的。   一个block只能存放一个文件的内容，所有block并非越大越好。   Block块越大对于单个的小文件(0.5K)多的业务，会非常浪费空间，因为，一个文件无论多大都会必须占用一个inode和一个block。但是对于大文件，可以提升读取的效率，因为如果block太小，就要读多个block，这样就消耗磁盘IO，如果block大，">
+  <meta name="description" content="1.有关Block的大小 磁盘读取数据是按Block为单位读取的。   一个block只能存放一个文件的内容，所有block并非越大越好。">
 <meta name="keywords" content="运维,linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="文件属性inode与block总结">
 <meta property="og:url" content="http://yoursite.com/2018/05/01/文件属性inode与block总结/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="1.有关Block的大小 磁盘读取数据是按Block为单位读取的。   一个block只能存放一个文件的内容，所有block并非越大越好。   Block块越大对于单个的小文件(0.5K)多的业务，会非常浪费空间，因为，一个文件无论多大都会必须占用一个inode和一个block。但是对于大文件，可以提升读取的效率，因为如果block太小，就要读多个block，这样就消耗磁盘IO，如果block大，">
+<meta property="og:site_name" content="Qin">
+<meta property="og:description" content="1.有关Block的大小 磁盘读取数据是按Block为单位读取的。   一个block只能存放一个文件的内容，所有block并非越大越好。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-05-02T15:59:05.746Z">
+<meta property="og:updated_time" content="2018-07-19T04:02:26.860Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="文件属性inode与block总结">
-<meta name="twitter:description" content="1.有关Block的大小 磁盘读取数据是按Block为单位读取的。   一个block只能存放一个文件的内容，所有block并非越大越好。   Block块越大对于单个的小文件(0.5K)多的业务，会非常浪费空间，因为，一个文件无论多大都会必须占用一个inode和一个block。但是对于大文件，可以提升读取的效率，因为如果block太小，就要读多个block，这样就消耗磁盘IO，如果block大，">
+<meta name="twitter:description" content="1.有关Block的大小 磁盘读取数据是按Block为单位读取的。   一个block只能存放一个文件的内容，所有block并非越大越好。">
   
-    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="Qin" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -181,6 +181,7 @@
 <ul>
 <li>一个block只能存放一个文件的内容，所有block并非越大越好。</li>
 </ul>
+<a id="more"></a>
 <ul>
 <li><p>Block块越大对于单个的小文件(0.5K)多的业务，会非常浪费空间，因为，一个文件无论多大都会必须占用一个inode和一个block。但是对于大文件，可以提升读取的效率，因为如果block太小，就要读多个block，这样就消耗磁盘IO，如果block大，则会读较少的Block就读完数据，从而减少磁盘IO。</p>
 </li>
@@ -348,6 +349,19 @@
             </div>
         </div>
         
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-有关Block的大小"><span class="toc-number">1.</span> <span class="toc-text">1.有关Block的大小</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">2.</span> <span class="toc-text">总结</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
         
     </div>
 </aside>
