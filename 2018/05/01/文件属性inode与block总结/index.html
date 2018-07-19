@@ -6,15 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | Hexo</title>
+  <title>文件属性inode与block总结 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="1.有关Block的大小 磁盘读取数据是按Block为单位读取的。   一个block只能存放一个文件的内容，所有block并非越大越好。   Block块越大对于单个的小文件(0.5K)多的业务，会非常浪费空间，因为，一个文件无论多大都会必须占用一个inode和一个block。但是对于大文件，可以提升读取的效率，因为如果block太小，就要读多个block，这样就消耗磁盘IO，如果block大，">
+<meta name="keywords" content="linux,运维">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文件属性inode与block总结">
+<meta property="og:url" content="http://yoursite.com/2018/05/01/文件属性inode与block总结/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1.有关Block的大小 磁盘读取数据是按Block为单位读取的。   一个block只能存放一个文件的内容，所有block并非越大越好。   Block块越大对于单个的小文件(0.5K)多的业务，会非常浪费空间，因为，一个文件无论多大都会必须占用一个inode和一个block。但是对于大文件，可以提升读取的效率，因为如果block太小，就要读多个block，这样就消耗磁盘IO，如果block大，">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-05-02T15:59:05.746Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="文件属性inode与block总结">
+<meta name="twitter:description" content="1.有关Block的大小 磁盘读取数据是按Block为单位读取的。   一个block只能存放一个文件的内容，所有block并非越大越好。   Block块越大对于单个的小文件(0.5K)多的业务，会非常浪费空间，因为，一个文件无论多大都会必须占用一个inode和一个block。但是对于大文件，可以提升读取的效率，因为如果block太小，就要读多个block，这样就消耗磁盘IO，如果block大，">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -150,89 +155,79 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-文件属性inode与block总结" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/03/web服务器磁盘满故障重现/" class="archive-article-date">
-  	<time datetime="2018-05-03T14:22:39.301Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-03</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/03/web服务器磁盘满故障重现/">WEB服务器磁盘满故障深入解析</a>
+    <h1 class="article-title" itemprop="name">
+      文件属性inode与block总结
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">运维</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/linux//" class="article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/01/文件属性inode与block总结/" class="archive-article-date">
+        
+        <a href="/2018/05/01/文件属性inode与block总结/" class="archive-article-date">
   	<time datetime="2018-05-01T04:12:28.950Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-01</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/01/文件属性inode与block总结/">文件属性inode与block总结</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1-有关Block的大小"><a href="#1-有关Block的大小" class="headerlink" title="1.有关Block的大小"></a>1.有关Block的大小</h1><ul>
+<li>磁盘读取数据是按Block为单位读取的。</li>
+</ul>
+<ul>
+<li>一个block只能存放一个文件的内容，所有block并非越大越好。</li>
+</ul>
+<ul>
+<li><p>Block块越大对于单个的小文件(0.5K)多的业务，会非常浪费空间，因为，一个文件无论多大都会必须占用一个inode和一个block。但是对于大文件，可以提升读取的效率，因为如果block太小，就要读多个block，这样就消耗磁盘IO，如果block大，则会读较少的Block就读完数据，从而减少磁盘IO。</p>
+</li>
+<li><p>生产环境一般设置为4K，特殊的业务，如视频可以加大block。</p>
+</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
+<li>磁盘分区格式化文件系统后，会分为inode和block两部分内容。</li>
+<li>inode存放文件的属性以及指向文件实体的指针，文件名不在inode里，一般在上级目录的block。</li>
+<li>访问文件，可以通过文件–&gt;inode–&gt;blocks。</li>
+<li>inode一般情况默认大小256B；block大小1、2、4K，默认是4K，注意，引导分区等特殊分区除外。</li>
+<li>通过df -i查看inode的数量及使用情况， dumpe2fs /dev/sda3 查看inode及block的大小及数量。</li>
+<li>一个文件至少占用一个inode及一个block，其中多个文件可以占用同一个inode（硬连接）。</li>
+<li>一个block只能被一个文件占用，block太大则会浪费，无法被其他文件使用。</li>
+<li>block不是越大越好，要根据业务的文件大小选择，一般默认是4K。</li>
+<li>可以在格式化的时候改变inode及block的大小。</li>
+</ol>
+<p>企业面试题：一个100M的磁盘分区，分别写入1K的文件，及写入1M的文件，分别可以写多少个？<br>假设Block 4K，分别写入1K的文件，那么写入文件的数量就是block的数量，浪费了3/4的容量。<br>假设Block 4K，分别写入1M的文件，基本可以写入100/1M的数量，这种情况inode和block都是足够。</p>
 
-        <div class="article-info info-on-right">
-          
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -248,7 +243,7 @@
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -261,123 +256,113 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/05/01/文件属性inode与block总结/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/01/linux重要子目录/" class="archive-article-date">
-  	<time datetime="2018-05-01T02:40:56.366Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-01</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2018/05/03/web服务器磁盘满故障重现/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          WEB服务器磁盘满故障深入解析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/05/01/linux重要子目录/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">linux重要子目录</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/01/linux重要子目录/">linux重要子目录</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">运维</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/linux//" class="article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/04/30/linux基础优化/" class="archive-article-date">
-  	<time datetime="2018-04-30T04:32:16.447Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-30</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/04/30/linux基础优化/">linux基础优化</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">运维</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/linux//" class="article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -400,8 +385,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
