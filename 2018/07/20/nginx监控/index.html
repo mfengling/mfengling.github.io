@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Qin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="qinjiao.fun">
-<meta property="og:type" content="website">
+  <meta name="description" content="创建Nginx监控项目 监控Nginx时，需要开启Nginx的stub_status模块，为保证安全可进行访问设置。 1、开启stub_status模块Nginx默认安装不包含stub_status状态模块，所以在编译Nginx的时候，需要添加以下参数：  –with-http_stub_status_module  添加后可以在配置文件nginx.conf中开启stub_status模块：  h">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Qin">
-<meta property="og:url" content="http://yoursite.com/README.html">
+<meta property="og:url" content="http://yoursite.com/2018/07/20/nginx监控/index.html">
 <meta property="og:site_name" content="Qin">
-<meta property="og:description" content="qinjiao.fun">
+<meta property="og:description" content="创建Nginx监控项目 监控Nginx时，需要开启Nginx的stub_status模块，为保证安全可进行访问设置。 1、开启stub_status模块Nginx默认安装不包含stub_status状态模块，所以在编译Nginx的时候，需要添加以下参数：  –with-http_stub_status_module  添加后可以在配置文件nginx.conf中开启stub_status模块：  h">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-11T16:09:35.865Z">
+<meta property="og:updated_time" content="2018-07-20T13:56:03.545Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Qin">
-<meta name="twitter:description" content="qinjiao.fun">
+<meta name="twitter:description" content="创建Nginx监控项目 监控Nginx时，需要开启Nginx的stub_status模块，为保证安全可进行访问设置。 1、开启stub_status模块Nginx默认安装不包含stub_status状态模块，所以在编译Nginx的时候，需要添加以下参数：  –with-http_stub_status_module  添加后可以在配置文件nginx.conf中开启stub_status模块：  h">
   
     <link rel="alternative" href="/atom.xml" title="Qin" type="application/atom+xml">
   
@@ -154,12 +154,80 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="page-" class="article article-type-page " itemscope itemprop="blogPost">
+            <article id="post-nginx监控" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="qinjiao-fun"><a href="#qinjiao-fun" class="headerlink" title="qinjiao.fun"></a>qinjiao.fun</h1>
+        <h1 id="创建Nginx监控项目"><a href="#创建Nginx监控项目" class="headerlink" title="创建Nginx监控项目"></a>创建Nginx监控项目</h1><hr>
+<p>监控Nginx时，需要开启Nginx的stub_status模块，为保证安全可进行访问设置。</p>
+<h2 id="1、开启stub-status模块"><a href="#1、开启stub-status模块" class="headerlink" title="1、开启stub_status模块"></a>1、开启stub_status模块</h2><p>Nginx默认安装不包含stub_status状态模块，所以在编译Nginx的时候，需要添加以下参数：</p>
+<blockquote>
+<p>–with-http_stub_status_module</p>
+</blockquote>
+<p>添加后可以在配置文件nginx.conf中开启stub_status模块：</p>
+<pre>
+http {
+    server {
+        listen         80;
+        server_name  localhost;
+
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+        # 以下location是实际添加部分  
+        location /nginx-status {
+            stub_status on;
+            access_log  off;
+        }
+    }
+}
+</pre>
+
+<h2 id="2、访问设置"><a href="#2、访问设置" class="headerlink" title="2、访问设置"></a>2、访问设置</h2><p>为了不让其它人浏览status页面，建议将“location /nginx-status”中的 nginx-status修改为其它字符串。</p>
+<h2 id="3、配置示范"><a href="#3、配置示范" class="headerlink" title="3、配置示范"></a>3、配置示范</h2><h3 id="到官网选择nginx稳定版本并编译安装："><a href="#到官网选择nginx稳定版本并编译安装：" class="headerlink" title="到官网选择nginx稳定版本并编译安装："></a>到官网选择nginx稳定版本并编译安装：</h3><pre>
+[root@linux-node1 ~]# yum install -y gcc gcc-c++ glibc openssl-devel pcre-devel
+[root@linux-node1 ~]# cd /usr/local/src/
+[root@linux-node1 src]# wget http://nginx.org/download/nginx-1.14.0.tar.gz
+[root@linux-node1 src]# tar -xf nginx-1.14.0.tar.gz
+[root@linux-node1 src]# cd nginx-1.14.0
+[root@linux-node1 nginx-1.14.0]# useradd -s /sbin/nologin -M www
+[root@linux-node1 nginx-1.14.0]# ./configure --prefix=/usr/local/nginx-1.14.0 --user=www --group=www --with-http_stub_status_module --with-http_ssl_module
+[root@linux-node1 nginx-1.14.0]# make && make install
+[root@linux-node1 nginx-1.14.0]# cd /usr/local/
+[root@linux-node1 local]# ln -s /usr/local/nginx-1.14.0/ /usr/local/nginx
+[root@linux-node1 local]# cd nginx/conf/
+[root@linux-node1 conf]# vim nginx.conf
+    # 在server段中加入
+        location /qin-status {
+        stub_status on;
+        access_log off;
+        allow 192.168.137.0/24;
+        deny all;
+        }
+
+[root@linux-node1 conf]# cd ../sbin/
+验证配置OK
+[root@linux-node1 sbin]# ./nginx -t
+nginx: the configuration file /usr/local/nginx-1.14.0/conf/nginx.conf syntax is ok
+nginx: configuration file /usr/local/nginx-1.14.0/conf/nginx.conf test is successful
+</pre>
+
+<h3 id="访问nginx状态页面"><a href="#访问nginx状态页面" class="headerlink" title="访问nginx状态页面"></a>访问nginx状态页面</h3><p>web访问nginx服务地址：192.168.137.101/qin-status</p>
+<pre>
+Active connections: 6 
+server accepts handled requests
+ 10 10 65 
+Reading: 0 Writing: 4 Waiting: 2 
+</pre>
+
+<h3 id="Nginxs-tatus结果含义"><a href="#Nginxs-tatus结果含义" class="headerlink" title="Nginxs tatus结果含义"></a>Nginxs tatus结果含义</h3><p>Active connections: 6<br>表示Nginx正在处理的活动连接数6个。</p>
+<p>server accepts handled requests<br>10 10 65</p>
+<p>第一个 server 表示Nginx启动到现在共处理了 10 个连接<br>第二个 accepts 表示Nginx启动到现在共成功创建 10 次握手<br>第三个 handled requests 表示总共处理了 65 次请求<br>请求丢失数 = 握手数 - 连接数 ，可以看出目前为止没有丢失请求</p>
+<p>Reading: 0 Writing: 4 Waiting: 2</p>
+<p>Reading:Nginx 读取到客户端的 Header 信息数<br>Writing:Nginx 返回给客户端 Header 信息数<br>Waiting:Nginx 已经处理完正在等候下一次请求指令的驻留链接（开启keep-alive的情况下，这个值等于 Active - (Reading+Writing)）</p>
+
       
 
       
@@ -238,7 +306,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/README.html" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/07/20/nginx监控/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -271,7 +339,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#qinjiao-fun"><span class="toc-number">1.</span> <span class="toc-text">qinjiao.fun</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#创建Nginx监控项目"><span class="toc-number">1.</span> <span class="toc-text">创建Nginx监控项目</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、开启stub-status模块"><span class="toc-number">1.1.</span> <span class="toc-text">1、开启stub_status模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、访问设置"><span class="toc-number">1.2.</span> <span class="toc-text">2、访问设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、配置示范"><span class="toc-number">1.3.</span> <span class="toc-text">3、配置示范</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#到官网选择nginx稳定版本并编译安装："><span class="toc-number">1.3.1.</span> <span class="toc-text">到官网选择nginx稳定版本并编译安装：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#访问nginx状态页面"><span class="toc-number">1.3.2.</span> <span class="toc-text">访问nginx状态页面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginxs-tatus结果含义"><span class="toc-number">1.3.3.</span> <span class="toc-text">Nginxs tatus结果含义</span></a></li></ol></li></ol></li></ol>
                     </div>
                 </span>
             </div>
@@ -313,7 +381,7 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

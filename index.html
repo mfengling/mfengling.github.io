@@ -43,7 +43,7 @@
 <div class="intrude-less">
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
-			<img src="" class="js-avatar">
+			<img src="/assets/qin.jpg" class="js-avatar">
 		</a>
 		<hgroup>
 		  <h1 class="header-author"><a href="/">Qin时</a></h1>
@@ -101,7 +101,7 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<div class="profilepic">
-				<img src="" class="js-avatar">
+				<img src="/assets/qin.jpg" class="js-avatar">
 			</div>
 			<hgroup>
 			  <h1 class="header-author js-header-author">Qin时</h1>
@@ -152,15 +152,80 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-操作系统安装及初始化规范" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-nginx监控" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="操作系统安装流程及初始化规范"><a href="#操作系统安装流程及初始化规范" class="headerlink" title="操作系统安装流程及初始化规范"></a>操作系统安装流程及初始化规范</h1><blockquote>
-<p>V1.0</p>
+        <h1 id="创建Nginx监控项目"><a href="#创建Nginx监控项目" class="headerlink" title="创建Nginx监控项目"></a>创建Nginx监控项目</h1><hr>
+<p>监控Nginx时，需要开启Nginx的stub_status模块，为保证安全可进行访问设置。</p>
+<h2 id="1、开启stub-status模块"><a href="#1、开启stub-status模块" class="headerlink" title="1、开启stub_status模块"></a>1、开启stub_status模块</h2><p>Nginx默认安装不包含stub_status状态模块，所以在编译Nginx的时候，需要添加以下参数：</p>
+<blockquote>
+<p>–with-http_stub_status_module</p>
 </blockquote>
-        
+<p>添加后可以在配置文件nginx.conf中开启stub_status模块：</p>
+<pre>
+http {
+    server {
+        listen         80;
+        server_name  localhost;
+
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+        # 以下location是实际添加部分  
+        location /nginx-status {
+            stub_status on;
+            access_log  off;
+        }
+    }
+}
+</pre>
+
+<h2 id="2、访问设置"><a href="#2、访问设置" class="headerlink" title="2、访问设置"></a>2、访问设置</h2><p>为了不让其它人浏览status页面，建议将“location /nginx-status”中的 nginx-status修改为其它字符串。</p>
+<h2 id="3、配置示范"><a href="#3、配置示范" class="headerlink" title="3、配置示范"></a>3、配置示范</h2><h3 id="到官网选择nginx稳定版本并编译安装："><a href="#到官网选择nginx稳定版本并编译安装：" class="headerlink" title="到官网选择nginx稳定版本并编译安装："></a>到官网选择nginx稳定版本并编译安装：</h3><pre>
+[root@linux-node1 ~]# yum install -y gcc gcc-c++ glibc openssl-devel pcre-devel
+[root@linux-node1 ~]# cd /usr/local/src/
+[root@linux-node1 src]# wget http://nginx.org/download/nginx-1.14.0.tar.gz
+[root@linux-node1 src]# tar -xf nginx-1.14.0.tar.gz
+[root@linux-node1 src]# cd nginx-1.14.0
+[root@linux-node1 nginx-1.14.0]# useradd -s /sbin/nologin -M www
+[root@linux-node1 nginx-1.14.0]# ./configure --prefix=/usr/local/nginx-1.14.0 --user=www --group=www --with-http_stub_status_module --with-http_ssl_module
+[root@linux-node1 nginx-1.14.0]# make && make install
+[root@linux-node1 nginx-1.14.0]# cd /usr/local/
+[root@linux-node1 local]# ln -s /usr/local/nginx-1.14.0/ /usr/local/nginx
+[root@linux-node1 local]# cd nginx/conf/
+[root@linux-node1 conf]# vim nginx.conf
+    # 在server段中加入
+        location /qin-status {
+        stub_status on;
+        access_log off;
+        allow 192.168.137.0/24;
+        deny all;
+        }
+
+[root@linux-node1 conf]# cd ../sbin/
+验证配置OK
+[root@linux-node1 sbin]# ./nginx -t
+nginx: the configuration file /usr/local/nginx-1.14.0/conf/nginx.conf syntax is ok
+nginx: configuration file /usr/local/nginx-1.14.0/conf/nginx.conf test is successful
+</pre>
+
+<h3 id="访问nginx状态页面"><a href="#访问nginx状态页面" class="headerlink" title="访问nginx状态页面"></a>访问nginx状态页面</h3><p>web访问nginx服务地址：192.168.137.101/qin-status</p>
+<pre>
+Active connections: 6 
+server accepts handled requests
+ 10 10 65 
+Reading: 0 Writing: 4 Waiting: 2 
+</pre>
+
+<h3 id="Nginxs-tatus结果含义"><a href="#Nginxs-tatus结果含义" class="headerlink" title="Nginxs tatus结果含义"></a>Nginxs tatus结果含义</h3><p>Active connections: 6<br>表示Nginx正在处理的活动连接数6个。</p>
+<p>server accepts handled requests<br>10 10 65</p>
+<p>第一个 server 表示Nginx启动到现在共处理了 10 个连接<br>第二个 accepts 表示Nginx启动到现在共成功创建 10 次握手<br>第三个 handled requests 表示总共处理了 65 次请求<br>请求丢失数 = 握手数 - 连接数 ，可以看出目前为止没有丢失请求</p>
+<p>Reading: 0 Writing: 4 Waiting: 2</p>
+<p>Reading:Nginx 读取到客户端的 Header 信息数<br>Writing:Nginx 返回给客户端 Header 信息数<br>Waiting:Nginx 已经处理完正在等候下一次请求指令的驻留链接（开启keep-alive的情况下，这个值等于 Active - (Reading+Writing)）</p>
+
       
 
       
@@ -172,387 +237,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/07/11/操作系统安装及初始化规范/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-web服务器磁盘满故障重现" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/05/03/web服务器磁盘满故障重现/">WEB服务器磁盘满故障深入解析</a>
-    </h1>
-  
-
-        
-        <a href="/2018/05/03/web服务器磁盘满故障重现/" class="archive-article-date">
-  	<time datetime="2018-05-03T14:22:39.301Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-03</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <a id="more"></a>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">yum install httpd -y</span><br><span class="line">sed -i <span class="string">'s#CustomLog logs/access_log combined#CustomLog /app/log/access_log combined#g'</span> /etc/httpd/conf/httpd.conf</span><br><span class="line">mkdir /app/<span class="built_in">log</span>/ -p</span><br><span class="line">dd <span class="keyword">if</span>=/dev/zero of=/dev/sdc bs=8K count=10</span><br><span class="line">mkfs -t ext4  /dev/sdc</span><br><span class="line">mount -o loop /dev/sdc /app/<span class="built_in">log</span>/</span><br><span class="line">/etc/init.d/httpd start</span><br><span class="line">useradd -r -s /sbin/nologin apache</span><br><span class="line">写满磁盘</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> `seq 1 100000`;<span class="keyword">do</span> curl 192.168.3.34&gt;/dev/null;<span class="keyword">done</span></span><br><span class="line">可查看到磁盘block已满</span><br><span class="line">df -h</span><br><span class="line">可查看到磁盘inode未满</span><br><span class="line">df -i</span><br><span class="line">删除占用空间的文件</span><br><span class="line">rm -f access_log</span><br><span class="line">再次查看磁盘block空间未释放</span><br><span class="line">df -h</span><br><span class="line">yum install lsof -y</span><br><span class="line">lsof用来查看文件被进程占用的情况。</span><br><span class="line">lsof | grep del</span><br><span class="line">/etc/init.d/httpd restart</span><br></pre></td></tr></table></figure>
-<h1 id="生产场景解决方案"><a href="#生产场景解决方案" class="headerlink" title="生产场景解决方案"></a>生产场景解决方案</h1><ol>
-<li>删除文件，重启服务。</li>
-<li>清空文件。</li>
-<li>删除以前产生的文件，不要删除当前被进程占用的文件。</li>
-</ol>
-<p>lsof命令还可以查看端口使用情况<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@liufangzhe <span class="built_in">log</span>]<span class="comment"># lsof -i :80</span></span><br><span class="line">COMMAND  PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME</span><br><span class="line">httpd   3236   root    4u  IPv6  24436      0t0  TCP *:http (LISTEN)</span><br><span class="line">httpd   3238 apache    4u  IPv6  24436      0t0  TCP *:http (LISTEN)</span><br><span class="line">httpd   3239 apache    4u  IPv6  24436      0t0  TCP *:http (LISTEN)</span><br><span class="line">httpd   3240 apache    4u  IPv6  24436      0t0  TCP *:http (LISTEN)</span><br><span class="line">httpd   3241 apache    4u  IPv6  24436      0t0  TCP *:http (LISTEN)</span><br><span class="line">httpd   3242 apache    4u  IPv6  24436      0t0  TCP *:http (LISTEN)</span><br><span class="line">httpd   3243 apache    4u  IPv6  24436      0t0  TCP *:http (LISTEN)</span><br><span class="line">httpd   3244 apache    4u  IPv6  24436      0t0  TCP *:http (LISTEN)</span><br><span class="line">httpd   3245 apache    4u  IPv6  24436      0t0  TCP *:http (LISTEN)</span><br></pre></td></tr></table></figure></p>
-<h1 id="删除文件为何空间不释放？"><a href="#删除文件为何空间不释放？" class="headerlink" title="删除文件为何空间不释放？"></a>删除文件为何空间不释放？</h1><ol>
-<li>hardlink的存在多个</li>
-<li>文件被进程占用</li>
-<li>磁盘空余空间维护出现问题，如服务器突然断电，磁盘有了垃圾文件，当启动的时候使用fsck可清理。</li>
-</ol>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">运维</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/linux//" class="article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/05/03/web服务器磁盘满故障重现/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-文件属性inode与block总结" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/05/01/文件属性inode与block总结/">文件属性inode与block总结</a>
-    </h1>
-  
-
-        
-        <a href="/2018/05/01/文件属性inode与block总结/" class="archive-article-date">
-  	<time datetime="2018-05-01T04:12:28.950Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1-有关Block的大小"><a href="#1-有关Block的大小" class="headerlink" title="1.有关Block的大小"></a>1.有关Block的大小</h1><ul>
-<li>磁盘读取数据是按Block为单位读取的。</li>
-</ul>
-<ul>
-<li>一个block只能存放一个文件的内容，所有block并非越大越好。</li>
-</ul>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">运维</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/linux//" class="article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/05/01/文件属性inode与block总结/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-linux重要子目录" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/05/01/linux重要子目录/">linux重要子目录</a>
-    </h1>
-  
-
-        
-        <a href="/2018/05/01/linux重要子目录/" class="archive-article-date">
-  	<time datetime="2018-05-01T02:40:56.366Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1-网卡配置文件"><a href="#1-网卡配置文件" class="headerlink" title="1.网卡配置文件"></a>1.网卡配置文件</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/sysconfig/network-scripts/ifcfg-eth0</span><br><span class="line">DEVICE=eth0</span><br><span class="line">TYPE=Ethernet</span><br><span class="line">ONBOOT=yes</span><br><span class="line">NM_CONTROLLED=yes</span><br><span class="line">BOOTPROTO=static</span><br><span class="line">IPADDR=192.168.3.34</span><br><span class="line">PREFIX=24</span><br><span class="line">GATEWAY=192.168.3.1</span><br><span class="line">DNS1=221.5.88.88</span><br><span class="line"></span><br><span class="line">&lt;!-- more --&gt;</span><br><span class="line"></span><br><span class="line">启动方式</span><br><span class="line">1.1 service network restart</span><br><span class="line">1.2 ifdown eth0 &amp;&amp; ifup eth0</span><br></pre></td></tr></table></figure>
-<h1 id="2-DNS解析文件"><a href="#2-DNS解析文件" class="headerlink" title="2.DNS解析文件"></a>2.DNS解析文件</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/resolv.conf</span><br><span class="line">nameserver 221.5.88.88</span><br></pre></td></tr></table></figure>
-<h1 id="3-设定用户IP与域名或主机名的对应解析表，相当于本地DNS"><a href="#3-设定用户IP与域名或主机名的对应解析表，相当于本地DNS" class="headerlink" title="3.设定用户IP与域名或主机名的对应解析表，相当于本地DNS"></a>3.设定用户IP与域名或主机名的对应解析表，相当于本地DNS</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br><span class="line">192.168.3.34	<span class="built_in">test</span></span><br></pre></td></tr></table></figure>
-<h1 id="4-开机自动mount的配置文件"><a href="#4-开机自动mount的配置文件" class="headerlink" title="4.开机自动mount的配置文件"></a>4.开机自动mount的配置文件</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/fstab</span><br></pre></td></tr></table></figure>
-<h1 id="5-开机自启动的程序文件"><a href="#5-开机自启动的程序文件" class="headerlink" title="5.开机自启动的程序文件"></a>5.开机自启动的程序文件</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/rc.local</span><br></pre></td></tr></table></figure>
-<h1 id="6-开机系统加载的启动级别文件"><a href="#6-开机系统加载的启动级别文件" class="headerlink" title="6.开机系统加载的启动级别文件"></a>6.开机系统加载的启动级别文件</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/inittab</span><br></pre></td></tr></table></figure>
-<h1 id="7-设定NFS网络文件系统的配置文件"><a href="#7-设定NFS网络文件系统的配置文件" class="headerlink" title="7.设定NFS网络文件系统的配置文件"></a>7.设定NFS网络文件系统的配置文件</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/exports</span><br></pre></td></tr></table></figure>
-<h1 id="8-系统全局环境变量配置路径"><a href="#8-系统全局环境变量配置路径" class="headerlink" title="8.系统全局环境变量配置路径"></a>8.系统全局环境变量配置路径</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/profile</span><br><span class="line">/etc/profile.d</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">运维</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/linux//" class="article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/05/01/linux重要子目录/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-linux基础优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/30/linux基础优化/">linux基础优化</a>
-    </h1>
-  
-
-        
-        <a href="/2018/04/30/linux基础优化/" class="archive-article-date">
-  	<time datetime="2018-04-30T04:32:16.447Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-30</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1-创建一个普通用户"><a href="#1-创建一个普通用户" class="headerlink" title="1.创建一个普通用户"></a>1.创建一个普通用户</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useradd qinjiao</span><br><span class="line"><span class="built_in">echo</span> 123456 | passwd --stdin qinjiao</span><br><span class="line"><span class="built_in">history</span> -d 2	<span class="comment">#删除命令历史记录</span></span><br></pre></td></tr></table></figure>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">运维</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/linux//" class="article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/04/30/linux基础优化/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/07/20/nginx监控/">展开全文 >></a>
         </p>
       
 
@@ -673,14 +358,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">运维</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
-              </li>
             
             <div class="clearfix"></div>
           </ul>
